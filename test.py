@@ -20,7 +20,6 @@ for i in range(len(colortxt)):
 
 
 reader.GetOutput().GetCellData().SetScalars(colors)
-print (reader.GetOutput().GetNumberOfCells())
 
 
 # Set Mapper and Actor
@@ -41,7 +40,7 @@ actor.SetMapper(mapper)
 renderer = vtk.vtkRenderer()
 renderWindow = vtk.vtkRenderWindow()
 renderWindow.AddRenderer(renderer)
-renderWindow.SetSize(1280, 720)
+#renderWindow.SetSize(1280, 720)
 renderWindowInteractor = vtk.vtkRenderWindowInteractor()
 renderWindowInteractor.SetRenderWindow(renderWindow)
 

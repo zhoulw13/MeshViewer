@@ -25,8 +25,6 @@ class MainWindow(QMainWindow):
 
 
 		reader.GetOutput().GetCellData().SetScalars(colors)
-		print (reader.GetOutput().GetNumberOfCells())
-
 
 		# Set Mapper and Actor
 		mapper = vtk.vtkPolyDataMapper()
@@ -53,6 +51,7 @@ class MainWindow(QMainWindow):
 		self.iren = self.vtkWidget.GetRenderWindow().GetInteractor()
 
 		self.ren.AddActor(actor)
+		self.ren.SetBackground(0.5,0.3,0.16)
  
 		self.ren.ResetCamera()
  
