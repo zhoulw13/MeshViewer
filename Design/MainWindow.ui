@@ -40,7 +40,7 @@
       <x>620</x>
       <y>10</y>
       <width>201</width>
-      <height>541</height>
+      <height>141</height>
      </rect>
     </property>
     <property name="title">
@@ -59,7 +59,7 @@
       <string>#Num Of Points</string>
      </property>
     </widget>
-    <widget class="QTextBrowser" name="NumOfPoints">
+    <widget class="QTextBrowser" name="NumOfPointsText">
      <property name="geometry">
       <rect>
        <x>100</x>
@@ -69,7 +69,7 @@
       </rect>
      </property>
     </widget>
-    <widget class="QTextBrowser" name="NumOfLines">
+    <widget class="QTextBrowser" name="NumOfLinesText">
      <property name="geometry">
       <rect>
        <x>100</x>
@@ -105,7 +105,7 @@
       <string>#Num Of Meshes</string>
      </property>
     </widget>
-    <widget class="QTextBrowser" name="NumOfCells">
+    <widget class="QTextBrowser" name="NumOfCellsText">
      <property name="geometry">
       <rect>
        <x>100</x>
@@ -113,6 +113,120 @@
        <width>91</width>
        <height>31</height>
       </rect>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_2">
+    <property name="geometry">
+     <rect>
+      <x>620</x>
+      <y>160</y>
+      <width>201</width>
+      <height>221</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Control Pannel</string>
+    </property>
+    <widget class="QRadioButton" name="POP">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>30</y>
+       <width>181</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Adjacent Points (Input Point ID)</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="MOP">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>60</y>
+       <width>181</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Adjacent Meshes (Input Point ID)</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="MOM">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>90</y>
+       <width>181</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Adjacent Meshes (Input Mesh ID)</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="NOM">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>120</y>
+       <width>181</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Mesh Normal (Input Mesh ID)</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="inputID">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>181</y>
+       <width>101</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="buttonDraw">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>180</y>
+       <width>75</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Draw!</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="AP3">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>150</y>
+       <width>82</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Area Paint(3)</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="AP2">
+     <property name="geometry">
+      <rect>
+       <x>110</x>
+       <y>150</y>
+       <width>82</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Area Paint(2)</string>
      </property>
     </widget>
    </widget>

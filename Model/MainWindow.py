@@ -19,6 +19,13 @@ class MainWindow(QMainWindow):
 		self.actionMesh.triggered.connect(self.loadMesh)
 		self.actionColor.triggered.connect(self.loadColor)
 		self.actionExit.triggered.connect(self.close)
+		self.buttonDraw.clicked.connect(self.draw)
+
+		# Basic Info
+		self.numOfPoints = 0
+		self.numOfLines = 0
+		self.numOfCells = 0
+
 
 		self.show()
 
@@ -31,20 +38,56 @@ class MainWindow(QMainWindow):
 		self.interactor.Initialize()
 		self.interactor.Start()
 
-		a,b,c = self.vtkViewer.basicInfo()
-		self.NumOfPoints.setText(str(a))
-		self.NumOfLines.setText(str(b))
-		self.NumOfCells.setText(str(c))
+		self.numOfPoints, self.numOfLines, self.numOfCells = self.vtkViewer.basicInfo()
+		self.NumOfPointsText.setText(str(self.numOfPoints))
+		self.NumOfLinesText.setText(str(self.numOfLines))
+		self.NumOfCellsText.setText(str(self.numOfCells))
 
 	def loadColor(self):
 		fileName = QFileDialog.getOpenFileName(self, "Load Color", ".", "Color Files (*.txt)")
-		if len(fileName) == 0:
+		if len(fileName) == 0 or self.vtkViewer.reader == None:
 			return
 		if not self.vtkViewer.loadColor(fileName):
 			return 
 
 		self.interactor.Initialize()	
 		self.interactor.Start()
+
+	def draw(self):
+		if self.vtkViewer.reader == None:
+			return
+
+		num = self.inputID.text()
+		if self.AP2.isChecked() or self.AP3.isChecked():
+			try:
+				num = list(map(int, num.split(' ')))
+			except Exception:
+				return
+		else:
+			try:
+				num = int(num)
+			except Exception:
+				return
+
+		if self.POP.isChecked() and num >= 0 and num < self.numOfPoints:
+			self.vtkViewer.drawPOP(num)
+		elif self.MOP.isChecked() and num >= 0 and num < self.numOfPoints:
+			self.vtkViewer.drawMOP(num)
+		elif self.MOM.isChecked() and num >= 0 and num < self.numOfCells:
+			self.vtkViewer.drawMOM(num)
+		elif self.NOM.isChecked() and num >= 0 and num < self.numOfCells:
+			self.vtkViewer.drawNOM(num)
+		elif (self.AP2.isChecked() or self.AP3.isChecked()) and max(num) < self.numOfPoints and min(num) >= 0:
+			if self.AP2.isChecked():
+				self.vtkViewer.drawArea(num, 2)
+			else:
+				self.vtkViewer.drawArea(num, 3)
+		else:
+			return
+
+		self.interactor.Initialize()
+		self.interactor.Start()
+
 
 		
 
