@@ -1,8 +1,11 @@
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
-from PyQt4 import uic
-from vtk.qt4.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
+from PyQt5 import uic
+from PyQt5.QtChart import QChart, QChartView, QLineSeries
+from PyQt5.QtGui import QPolygonF, QPainter
+from vtk.qt.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
 from Model.VtkViewer import *
+import numpy as np
 
 class MainWindow(QMainWindow):
 	def __init__(self, parent=None):
@@ -20,19 +23,21 @@ class MainWindow(QMainWindow):
 		self.actionColor.triggered.connect(self.loadColor)
 		self.actionExit.triggered.connect(self.close)
 		self.buttonDraw.clicked.connect(self.draw)
+		self.buttonD2.clicked.connect(self.drawD2)
 
 		# Basic Info
 		self.numOfPoints = 0
 		self.numOfLines = 0
 		self.numOfCells = 0
 
-
 		self.show()
 
 	def loadMesh(self):
-		fileName = QFileDialog.getOpenFileName(self, "Load Mesh", ".", "Mesh Files (*.obj *.off)")
+		fileName, _ = QFileDialog.getOpenFileName(self, "Load Mesh", ".", "Mesh Files (*.obj *.off)")
 		if len(fileName) == 0:
 			return
+
+		self.clear()
 
 		self.vtkViewer.loadMesh(fileName)
 		self.interactor.Initialize()
@@ -44,7 +49,7 @@ class MainWindow(QMainWindow):
 		self.NumOfCellsText.setText(str(self.numOfCells))
 
 	def loadColor(self):
-		fileName = QFileDialog.getOpenFileName(self, "Load Color", ".", "Color Files (*.txt)")
+		fileName, _ = QFileDialog.getOpenFileName(self, "Load Color", ".", "Color Files (*.txt)")
 		if len(fileName) == 0 or self.vtkViewer.reader == None:
 			return
 		if not self.vtkViewer.loadColor(fileName):
@@ -88,6 +93,40 @@ class MainWindow(QMainWindow):
 		self.interactor.Initialize()
 		self.interactor.Start()
 
+	def drawD2(self):
+		if self.vtkViewer.reader == None:
+			return
 
-		
+		num = self.inputD2.text()
+		try:
+			num = list(map(int, num.split(' ')))
+		except Exception:
+			return
+		if len(num) != 2 or num[0] <= 1 or num[1] <= 1:
+			return
 
+		self.clear()
+
+		histogram, scale = self.vtkViewer.d2Sample(num[0], num[1])
+
+		d2Chart = QChart()
+		d2Chart.legend().hide()
+		polyline = QPolygonF(num[0])
+		pointer = polyline.data()
+		dtype, tinfo = np.float, np.finfo
+		pointer.setsize(2*polyline.size()*tinfo(dtype).dtype.itemsize)
+		memory = np.frombuffer(pointer, dtype)
+		memory[:(num[0]-1)*2+1:2] = scale
+		memory[1:(num[0]-1)*2+2:2] = histogram
+		curve = QLineSeries()
+		curve.append(polyline)
+
+		d2Chart.addSeries(curve)
+		d2Chart.createDefaultAxes()
+
+		ChartView = QChartView(d2Chart)
+		self.d2ChartLayout.addWidget(ChartView)
+
+	def clear(self):
+		for i in reversed(range(self.d2ChartLayout.count())):
+			self.d2ChartLayout.itemAt(i).widget().setParent(None)

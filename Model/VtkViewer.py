@@ -1,6 +1,7 @@
 import vtk
 from Model.vtkOFFReader import vtkOFFReader
-import math
+import math, random
+import numpy as np
 
 class VtkViewer:
 	def __init__(self):
@@ -185,9 +186,7 @@ class VtkViewer:
 		start = [sum(x)/3 for x in zip(p1,p2,p3)]
 		norm = [0.0, 0.0, 0.0]
 		vtk.vtkMath.Cross([a-b for a,b in zip(p2,p1)], [a-b for a,b in zip(p3, p1)], norm)
-		print (norm)
 		vtk.vtkMath.Normalize(norm)
-		print (norm)
 		end = [a+self.scale*b for a,b in zip(start, norm)]
 		self.drawLine(start, end, (1,1,0))
 
@@ -208,6 +207,25 @@ class VtkViewer:
 				cells.InsertNextId(k)
 		self.drawCells(cells, (1,1,0))
 
+	def d2Sample(self, bins, sampleNum):
+		points = self.mesh.GetPoints()
+
+		distance = []
+		for i in range(sampleNum):
+			id1, id2 = random.sample(range(self.mesh.GetNumberOfPoints()), 2)
+			p1 = points.GetPoint(id1)
+			p2 = points.GetPoint(id2)
+			distance.append(math.sqrt(vtk.vtkMath.Distance2BetweenPoints(p1, p2)))
+
+		histogram = [0.0]*bins
+		minimum = min(distance)
+		maximum = max(distance)
+		scale = (maximum - minimum) / (bins-1)
+
+		for d in distance:
+			histogram[int((d - minimum)/scale)] += 1
+		histogram = [x/sampleNum for x in histogram]
+		return np.array(histogram), scale*np.array(range(bins))
 
 	def vtkIdlist2list(self, idList):
 		result = []
